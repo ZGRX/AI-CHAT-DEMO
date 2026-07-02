@@ -68,6 +68,17 @@ h1 {
     margin-top: 16px;
 }
 
+#task-select {
+    width: 124px;
+    height: 44px;
+    padding: 0 10px;
+    font-size: 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1f2933;
+}
+
 #message-input {
     flex: 1;
     min-width: 0;
@@ -79,6 +90,7 @@ h1 {
     background: #ffffff;
 }
 
+#task-select:focus,
 #message-input:focus {
     outline: none;
     border-color: #2563eb;
@@ -125,6 +137,10 @@ button:active {
 
     .chat-form {
         flex-direction: column;
+    }
+
+    #task-select {
+        width: 100%;
     }
 
     button {

@@ -12,7 +12,14 @@
         <div id="messages" class="messages"></div>
 
         <form id="chat-form" class="chat-form">
-            <input id="message-input" type="text" placeholder="请输入你的问题" autocomplete="off">
+            <select id="task-select" aria-label="选择处理任务">
+                <option value="chat">聊天</option>
+                <option value="summarize">总结</option>
+                <option value="translate">翻译</option>
+                <option value="explain_code">代码解释</option>
+                <option value="weekly_report">周报</option>
+            </select>
+            <input id="message-input" type="text" placeholder="请输入内容" autocomplete="off">
             <button type="submit">发送</button>
         </form>
     </main>
