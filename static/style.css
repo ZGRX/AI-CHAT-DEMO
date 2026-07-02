@@ -1,0 +1,133 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, "Microsoft YaHei", sans-serif;
+    background: #f4f6f8;
+    color: #1f2933;
+}
+
+.chat {
+    width: min(860px, calc(100% - 32px));
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 32px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    margin: 0 0 24px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1px solid #d8dee6;
+    border-radius: 8px;
+}
+
+.message {
+    max-width: 78%;
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+    border-radius: 8px;
+}
+
+.message.user {
+    margin-left: auto;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.message.assistant {
+    margin-right: auto;
+    background: #eef2f7;
+    color: #1f2933;
+}
+
+.message.error {
+    margin-right: auto;
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.chat-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+#message-input {
+    flex: 1;
+    min-width: 0;
+    height: 44px;
+    padding: 0 14px;
+    font-size: 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+#message-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+button {
+    width: 88px;
+    height: 44px;
+    border: 0;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    background: #111827;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #374151;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+@media (max-width: 600px) {
+    .chat {
+        width: min(100% - 20px, 860px);
+        padding: 18px 0;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .messages {
+        padding: 14px;
+    }
+
+    .message {
+        max-width: 90%;
+    }
+
+    .chat-form {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+    }
+}

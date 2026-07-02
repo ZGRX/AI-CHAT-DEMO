@@ -24,16 +24,23 @@ while True:
 
     try:
         #用 client 这个 OpenAI 客户端，进入“聊天”功能，使用“补全/生成回复”接口，创建一次请求。
-        response = client.chat.completions.create(
+        stream = client.chat.completions.create(
             model=model,
             messages=messages,
             temperature=0.7,
             max_tokens=300,
+            stream=True,
         )
-        #choices 是“候选回答列表”
-        #这个 message 通常包含：role和content
-        answer = response.choices[0].message.content
-        print("AI:",answer)
+        print("AI：", end="", flush=True)#正常情况下print输出会放在缓冲区，flush = True让马上显现
+        answer = ""
+        for chunk in stream:
+            text_piece = chunk.choices[0].delta.content#delta 是流式返回时API/SDK对象里的字段名。
+
+            if text_piece:
+                print(text_piece, end="", flush=True)
+                answer += text_piece
+
+        print()
 
         messages.append({"role": "assistant", "content": answer})
 
