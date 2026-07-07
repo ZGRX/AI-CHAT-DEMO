@@ -14,11 +14,11 @@ function addMessage(role, content) {
 
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
-
+    //如果按钮已经禁用了，说明上一条消息还没发送完，直接退出，防止重复发送。
     if (button.disabled) {
         return;
     }
-
+    //trim() 会去掉前后的空格。
     const userText = input.value.trim();
 
     if (!userText) {
@@ -27,7 +27,7 @@ form.addEventListener("submit", async (event) => {
 
     const task = taskSelect.value;
 
-    addMessage("user", `你：${userText}`);
+    addMessage("user", `YOU：${userText}`);
     input.value = "";
     button.disabled = true;
     button.textContent = "发送中";
@@ -44,8 +44,8 @@ form.addEventListener("submit", async (event) => {
             task: task,
             messages: history,
         };
-
-        const response = await fetch("/process", {
+        //流式输出
+        const response = await fetch("/process-stream", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -53,17 +53,58 @@ form.addEventListener("submit", async (event) => {
             body: JSON.stringify(requestBody),
         });
 
-        const data = await response.json();
-
-        if (!response.ok || data.error) {
-            throw new Error(data.error || `HTTP ${response.status}`);
+        if (!response.ok || !response.body) {
+            throw new Error(`HTTP ${response.status}`);
         }
 
-        addMessage("assistant", `AI：${data.answer}`);
+        const assistantMessage = document.createElement("div");
+        assistantMessage.className = "message assistant";
+        assistantMessage.textContent = "AI：";
+        messages.appendChild(assistantMessage);
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+
+        let assistantText = "";
+        let buffer = "";
+
+        while (true) {
+            const { value, done } = await reader.read();
+
+            if (done) {
+                break;
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+
+            const events = buffer.split("\n\n");
+            buffer = events.pop();
+
+            for (const eventText of events) {
+                const line = eventText
+                    .split("\n")
+                    .find((line) => line.startsWith("data: "));
+
+                if (!line) {
+                    continue;
+                }
+
+                const data = JSON.parse(line.slice(6));
+
+                if (data.done) {
+                    continue;
+                }
+
+                if (data.delta) {
+                    assistantText += data.delta;
+                    assistantMessage.textContent = `AI：${assistantText}`;
+                }
+            }
+        }
 
         history.push({
             role: "assistant",
-            content: data.answer,
+            content: assistantText,
         });
     } catch (error) {
         history.pop();
